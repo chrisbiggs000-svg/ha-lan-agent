@@ -1,8 +1,8 @@
-ARG BUILD_FROM
-FROM $BUILD_FROM
+ARG BUILD_ARCH=aarch64
+FROM ghcr.io/home-assistant/${BUILD_ARCH}-base-python:3.13-alpine3.23
 
-# Install Python and dependencies
-RUN apk add --no-cache python3 py3-pip
+# Ensure pip is available (base image already has python3)
+RUN apk add --no-cache py3-pip
 
 WORKDIR /app
 COPY agent.py protocol.py requirements.txt ./

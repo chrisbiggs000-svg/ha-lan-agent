@@ -1,6 +1,6 @@
 name: "LAN Agent"
-description: "Local network agent — lets Muse control HA, UniFi, and LAN devices"
-version: "1.0.0"
+description: "Hardened local network agent — lets Muse control HA, UniFi, and LAN devices over an authenticated command channel"
+version: "2.0.0"
 slug: "lan_agent"
 init: false
 arch:
@@ -15,15 +15,21 @@ options:
   unifi_url: "https://192.168.1.1"
   unifi_user: ""
   unifi_pass: ""
+  command_secret: ""
+  command_topic: "ha-cmd-0aec09cbbbe3f27ca834e6f2"
+  result_topic: "ha-res-0c0f1ebc23696c11f400fad1"
+  ntfy_server: "https://ntfy.sh"
+  ntfy_token: ""
   poll_interval: 15
-  command_topic: ""
-  result_topic: ""
 schema:
   ha_url: str
-  ha_token: str?
+  ha_token: password
   unifi_url: str?
   unifi_user: str?
   unifi_pass: str?
-  poll_interval: int(5,300)?
+  command_secret: password
   command_topic: str
   result_topic: str
+  ntfy_server: str?
+  ntfy_token: password?
+  poll_interval: int(5,300)?

@@ -8,7 +8,6 @@ arch:
   - amd64
   - armv7
 host_network: true
-privileged: false
 options:
   ha_url: "http://homeassistant:8123"
   ha_token: ""

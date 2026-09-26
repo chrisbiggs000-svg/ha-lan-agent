@@ -75,7 +75,7 @@ class Agent:
         self.ha_url = cfg["ha_url"].rstrip("/")
         self.ha_token = cfg.get("ha_token", "")
         self.poll_interval = int(cfg.get("poll_interval", 15))
-        self.unifi_session = None
+        self._unifi_session = None
         self.nonces = NonceStore()
         self._load_persisted()
 
@@ -172,8 +172,8 @@ class Agent:
 
     # --- UniFi helpers ----------------------------------------------------
     def unifi_session(self):
-        if self.unifi_session:
-            return self.unifi_session
+        if self._unifi_session:
+            return self._unifi_session
         import urllib3
         urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
         base = self.cfg.get("unifi_url", "https://192.168.1.1").rstrip("/")
@@ -193,15 +193,15 @@ class Agent:
         token = r.headers.get("X-CSRF-Token")
         if token:
             s.headers["X-CSRF-Token"] = token
-        self.unifi_session = (s, base)
-        return self.unifi_session
+        self._unifi_session = (s, base)
+        return self._unifi_session
 
     def unifi_request(self, method, path, body=None, site="default"):
         s, base = self.unifi_session()
         url = f"{base}/proxy/network/api/s/{site}{path}"
         r = s.request(method, url, json=body, timeout=30)
         if r.status_code == 401:
-            self.unifi_session = None
+            self._unifi_session = None
             raise RuntimeError("UniFi session expired, retry")
         try:
             data = r.json()

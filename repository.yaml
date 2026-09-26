@@ -1,0 +1,4 @@
+name: LAN Agent Repository
+url: https://github.com/chrisbiggs000-svg/ha-lan-agent
+maintainer: Chris Biggs
+description: Local network agent for Home Assistant — lets Muse control HA, UniFi, and LAN devices.

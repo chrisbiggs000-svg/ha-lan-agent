@@ -1,0 +1,29 @@
+name: "LAN Agent"
+description: "Local network agent — lets Muse control HA, UniFi, and LAN devices"
+version: "1.0.0"
+slug: "lan_agent"
+init: false
+arch:
+  - aarch64
+  - amd64
+  - armv7
+host_network: true
+privileged: false
+options:
+  ha_url: "http://homeassistant:8123"
+  ha_token: ""
+  unifi_url: "https://192.168.1.1"
+  unifi_user: ""
+  unifi_pass: ""
+  poll_interval: 15
+  command_topic: ""
+  result_topic: ""
+schema:
+  ha_url: str
+  ha_token: str?
+  unifi_url: str?
+  unifi_user: str?
+  unifi_pass: str?
+  poll_interval: int(5,300)?
+  command_topic: str
+  result_topic: str

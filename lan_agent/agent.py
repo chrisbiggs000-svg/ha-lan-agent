@@ -75,6 +75,7 @@ class Agent:
         # HA access: prefer the Supervisor token (homeassistant_api: true) so no
         # long-lived HA token has to be configured. Falls back to ha_url/ha_token.
         supervisor_token = os.environ.get("SUPERVISOR_TOKEN")
+        log(f"DEBUG env names: {sorted(k for k in os.environ if 'TOKEN' in k or 'SUPERVISOR' in k or 'HASSIO' in k)}")
         if supervisor_token:
             self.ha_url = "http://supervisor/core/api"
             self.ha_token = supervisor_token

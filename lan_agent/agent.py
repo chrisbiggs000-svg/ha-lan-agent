@@ -72,8 +72,17 @@ class Agent:
         self.cmd_topic = cfg["command_topic"]
         self.res_topic = cfg["result_topic"]
         self.ntfy_token = cfg.get("ntfy_token", "")
-        self.ha_url = cfg["ha_url"].rstrip("/")
-        self.ha_token = cfg.get("ha_token", "")
+        # HA access: prefer the Supervisor token (homeassistant_api: true) so no
+        # long-lived HA token has to be configured. Falls back to ha_url/ha_token.
+        supervisor_token = os.environ.get("SUPERVISOR_TOKEN")
+        if supervisor_token:
+            self.ha_url = "http://supervisor/core/api"
+            self.ha_token = supervisor_token
+            self._ha_via_supervisor = True
+        else:
+            self.ha_url = cfg.get("ha_url", "http://homeassistant:8123").rstrip("/")
+            self.ha_token = cfg.get("ha_token", "")
+            self._ha_via_supervisor = False
         self.poll_interval = int(cfg.get("poll_interval", 15))
         self._unifi_session = None
         self.nonces = NonceStore()
@@ -341,8 +350,9 @@ class Agent:
         self.respond(cmd_id, action, ok, result)
 
     def run(self):
-        log("Starting LAN Agent v2.0.0")
-        log(f"HA URL: {self.ha_url} | poll: {self.poll_interval}s")
+        log("Starting LAN Agent v2.0.2")
+        via = "supervisor" if self._ha_via_supervisor else "direct"
+        log(f"HA URL: {self.ha_url} (via {via}) | poll: {self.poll_interval}s")
         if not self.ha_token:
             log("WARNING: no HA token configured")
         self.respond(f"hello-{uuid.uuid4().hex[:8]}", "hello", True,

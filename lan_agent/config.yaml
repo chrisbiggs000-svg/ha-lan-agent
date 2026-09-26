@@ -1,6 +1,6 @@
 name: "LAN Agent"
 description: "Hardened local network agent — lets Muse control HA, UniFi, and LAN devices over an authenticated command channel"
-version: "2.0.1"
+version: "2.0.2"
 slug: "lan_agent"
 init: false
 arch:
@@ -8,6 +8,7 @@ arch:
   - amd64
   - armv7
 host_network: true
+homeassistant_api: true
 options:
   ha_url: "http://homeassistant:8123"
   ha_token: ""
@@ -21,8 +22,8 @@ options:
   ntfy_token: ""
   poll_interval: 15
 schema:
-  ha_url: str
-  ha_token: password
+  ha_url: str?
+  ha_token: password?
   unifi_url: str?
   unifi_user: str?
   unifi_pass: str?
